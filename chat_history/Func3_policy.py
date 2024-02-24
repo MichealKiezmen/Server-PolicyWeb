@@ -16,9 +16,9 @@ def generate_policy_card(user_needs_input):
     for idx, (need, ranking) in enumerate(user_needs_input.items() if isinstance(user_needs_input, dict) else [(need, None) for need in user_needs_input], 1):
         # Constructing the system message to instruct the model to output JSON
         system_message = "You are a helpful assistant of humanity designed to see a user/human need or desired outcome and output a potentially intelligent policy recommendation in JSON format."
-        
+
         user_message_content = f"Generate a policy recommendation in JSON format for the following user need: {need}" + (f" (Ranking: {ranking})" if ranking is not None else "")
-        
+
         data = {
             "model": "gpt-3.5-turbo-0125",  # Specify the model
             "messages": [
@@ -29,7 +29,7 @@ def generate_policy_card(user_needs_input):
         }
 
         headers = {
-            'Authorization': f'Bearer {os.getenv("OPENAI_API_KEY")}',
+            'Authorization': f'Bearer {os.getenv("apikey")}',
             'Content-Type': 'application/json'
         }
 
@@ -37,7 +37,7 @@ def generate_policy_card(user_needs_input):
             response = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
             response.raise_for_status()  # This will raise an exception for HTTP error codes
             response_data = response.json()
-            
+
             # Extracting the JSON content from the message
             policy_recommendation_json = json.loads(response_data['choices'][0]['message']['content'])
 
