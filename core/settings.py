@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+import dj_database_url
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-u$#0c1o!1!ja2zf9e0bk3k)x8pi2%s61c*n#s6%)q884_mx^38"
-JWT_SECRET = "mishin"
+SECRET_KEY = os.getenv("Settings_SECRET_KEY")
+JWT_SECRET = os.getenv("Settings_JWT_SECRET")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False #os.getenv("Settings_DEBUG").lower() == "true"
 
 ALLOWED_HOSTS = ['*']
 
@@ -78,8 +83,19 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+}
+
+
+
+# settings.py
+'''
 
 DATABASES = {
     "default": {
@@ -87,6 +103,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+'''
 
 
 # Password validation
